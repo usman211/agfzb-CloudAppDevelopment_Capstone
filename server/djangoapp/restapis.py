@@ -63,7 +63,30 @@ def get_dealers_from_cf(url, **kwargs):
             results.append(dealer_obj)
 
     return results
+# more functions
+def get_dealer_by_id(url, dealer_id):
+    # Call get_request with the dealer_id param
+    json_result = get_request(url, dealer_id=dealer_id)
 
+    # Create a CarDealer object from response
+    dealer = json_result[0]
+    dealer_obj = CarDealer(address=dealer["address"], city=dealer["city"], full_name=dealer["full_name"],
+                           id=dealer["id"], lat=dealer["lat"], long=dealer["long"],
+                           short_name=dealer["short_name"],
+                           st=dealer["st"], zip=dealer["zip"])
+    return dealer_obj
+
+def get_dealer_by_state(url, dealer_state):
+    # Call get_request with the dealer_id param
+    json_result = get_request(url, dealer_state=dealer_state)
+
+    # Create a CarDealer object from response
+    dealer = json_result[0]
+    dealer_obj = CarDealer(address=dealer["address"], city=dealer["city"], full_name=dealer["full_name"],
+                           id=dealer["id"], lat=dealer["lat"], long=dealer["long"],
+                           short_name=dealer["short_name"],
+                           st=dealer["st"], zip=dealer["zip"])
+    return dealer_obj
 
 # Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
 def get_dealer_by_id_from_cf(url, id, **kwargs):
@@ -91,6 +114,34 @@ def get_dealer_by_id_from_cf(url, id, **kwargs):
 # def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
+def get_dealer_reviews_from_cf(url, **kwargs):
+    results = []
+    json_result = get_request(url, dealerId=kwargs['dealer_id'])
+    if json_result:
+        for review in json_result:
+            review_obj = DealerReview(
+                dealership=review['dealership'],
+                name=review['name'],
+                purchase=review['purchase'],
+                review=review['review'],
+                purchase_date=review['purchase_date'],
+                car_make=review['car_make'],
+                car_model=review['car_model'],
+                car_year=review['car_year'],
+                sentiment=analyze_review_sentiments(review['review']),
+                id=review['_id'],
+            )
+            results.append(review_obj)
+    return results
 
+
+def analyze_review_sentiments(dealerreview):
+    version = '2022-04-07'
+    authenticator = IAMAuthenticator(NLU_API_KEY)
+    natural_language_understanding = NaturalLanguageUnderstandingV1(version=version, authenticator=authenticator)
+    natural_language_understanding.set_service_url(NLU_URL)
+    response = natural_language_understanding.analyze(text=dealerreview, features=Features(sentiment=SentimentOptions(targets=[dealerreview]))).get_result()
+    label = response['sentiment']['document']['label']
+    return label
 
 
