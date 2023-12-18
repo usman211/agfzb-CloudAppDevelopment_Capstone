@@ -217,4 +217,15 @@ def analyze_review_sentiments(dealer_review):
         print(f"Error in analyze_review_sentiments: {e}")
         return None
 
-
+# def analyze_review_sentiments(text):
+#     url = "https://api.au-syd.natural-language-understanding.watson.cloud.ibm.com/instances/235f9b08-229d-41de-9014-445ee9ea2a35"
+#     api_key = "LwG_yYL2rVwuc5eWGz6RAH9dx_KeZStH-mncDTWOB4FU"
+#     authenticator = IAMAuthenticator(api_key)
+#     natural_language_understanding = NaturalLanguageUnderstandingV1(version='2021-08-01',authenticator=authenticator)
+#     natural_language_understanding.set_service_url(url)
+#     response = natural_language_understanding.analyze( text=text+"hello hello hello",features=Features(sentiment=SentimentOptions(targets=[text+"hello hello hello"]))).get_result()
+#     label=json.dumps(response, indent=2)
+#     label = response['sentiment']['document']['label']
+    
+    
+#     return(label)

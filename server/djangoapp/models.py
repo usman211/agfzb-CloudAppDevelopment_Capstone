@@ -85,3 +85,27 @@ class DealerReview:
     def __str__(self):
         return "Reviewer Name: " + self.name + \
             "Review: " + self.review
+
+            
+# class DealerReview:
+
+#     def __init__(self, dealership, name, purchase, review):
+#         # Required attributes
+#         self.dealership = dealership
+#         self.name = name
+#         self.purchase = purchase
+#         self.review = review
+#         # Optional attributes
+#         self.purchase_date = ""
+#         self.purchase_make = ""
+#         self.purchase_model = ""
+#         self.purchase_year = ""
+#         self.sentiment = ""
+#         self.id = ""
+
+#     def __str__(self):
+#         return "Review: " + self.review
+
+#     def to_json(self):
+#         return json.dumps(self, default=lambda o: o.__dict__,
+#                             sort_keys=True, indent=4)

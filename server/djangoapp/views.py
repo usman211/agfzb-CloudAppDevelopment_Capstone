@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
-# from .models import related models
-from .restapis import get_dealers_from_cf,get_dealer_by_id,get_dealer_by_id_from_cf,get_dealer_reviews_from_cf
+from .models import CarModel, CarDealer
+from .restapis import get_dealers_from_cf,get_dealer_by_id,get_dealer_by_id_from_cf,get_dealer_reviews_from_cf,post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -143,7 +143,7 @@ def add_review(request, id):
     dealer_url = "https://usman211-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
     
     # Get dealer information
-    dealer = get_dealer_by_id(dealer_url, id=id)
+    dealer = get_dealer_by_id_from_cf(dealer_url, id)
     context["dealer"] = dealer
     
     if request.method == 'GET':
@@ -159,15 +159,15 @@ def add_review(request, id):
             
             # Get car information
             car = CarModel.objects.get(pk=car_id)
-            
+        
             # Prepare payload for the review
             payload = {
-                "time": datetime.utcnow().isoformat(),
+                "id": id,
                 "name": username,
                 "dealership": id,
-                "id": id,
                 "review": request.POST.get("content"),
                 "purchase": request.POST.get("purchasecheck") == 'on',
+                "time": datetime.utcnow().isoformat(),
                 "purchase_date": request.POST.get("purchasedate"),
                 "car_make": car.car_make.name,
                 "car_model": car.name,
