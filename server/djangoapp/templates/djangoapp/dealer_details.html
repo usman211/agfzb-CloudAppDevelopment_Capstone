@@ -48,6 +48,11 @@
         <div class="alert alert-warning" role="alert">{{ message }}</div>
     {% endfor %}
     {% endif %}
+
+    {% if user.is_authenticated %}
+    <a class="btn btn-primary" href="{% url 'djangoapp:add_review' dealer.id %}""><b>Write a car review</b></a>
+    {% endif %}
+    
     </body>
 
 </html>

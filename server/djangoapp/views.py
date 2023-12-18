@@ -138,5 +138,52 @@ def get_dealer_details1(request, dealer_id):
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
-# ...
+def add_review(request, id):
+    context = {}
+    dealer_url = "https://usman211-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+    
+    # Get dealer information
+    dealer = get_dealer_by_id(dealer_url, id=id)
+    context["dealer"] = dealer
+    
+    if request.method == 'GET':
+        # Get cars for the dealer
+        cars = CarModel.objects.all()
+        context["cars"] = cars
+        return render(request, 'djangoapp/add_review.html', context)
+    
+    elif request.method == 'POST':
+        if request.user.is_authenticated:
+            username = request.user.username
+            car_id = request.POST.get("car")
+            
+            # Get car information
+            car = CarModel.objects.get(pk=car_id)
+            
+            # Prepare payload for the review
+            payload = {
+                "time": datetime.utcnow().isoformat(),
+                "name": username,
+                "dealership": id,
+                "id": id,
+                "review": request.POST.get("content"),
+                "purchase": request.POST.get("purchasecheck") == 'on',
+                "purchase_date": request.POST.get("purchasedate"),
+                "car_make": car.car_make.name,
+                "car_model": car.name,
+                "car_year": int(car.year.strftime("%Y"))
+            }
+            
+            # Prepare payload for the API request
+            new_payload = {"review": payload}
+            review_post_url = "https://usman211-5000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review"
+            
+            # Make the POST request
+            post_request(review_post_url, new_payload, id=id)
+            
+            return redirect("djangoapp:dealer_details", id=id)
+        else:
+            # Handle the case where the user is not authenticated
+            messages.warning(request, "New review not added. Please log in to add a review !!")
+            return redirect('djangoapp:index')
 
