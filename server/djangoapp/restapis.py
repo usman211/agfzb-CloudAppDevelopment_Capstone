@@ -39,7 +39,7 @@ def get_request(url, **kwargs):
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 def post_request(url, json_payload, **kwargs):
     print(kwargs)
-    #print("Payload: ", json_payload, ". Params: ", kwargs)
+    print("Payload: ", json_payload, ". Params: ", kwargs)
     print("POST to {} ".format(url))
     apikey = kwargs.get("apikey")
     dealer_id = kwargs.get("id")

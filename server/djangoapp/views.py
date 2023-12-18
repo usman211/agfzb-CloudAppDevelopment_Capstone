@@ -162,26 +162,26 @@ def add_review(request, id):
         
             # Prepare payload for the review
             payload = {
-                "id": id,
-                "name": username,
                 "dealership": id,
-                "review": request.POST.get("content"),
+                "name": username,
                 "purchase": request.POST.get("purchasecheck") == 'on',
-                "time": datetime.utcnow().isoformat(),
+                "review": request.POST.get("content"),
                 "purchase_date": request.POST.get("purchasedate"),
                 "car_make": car.car_make.name,
                 "car_model": car.name,
-                "car_year": int(car.year.strftime("%Y"))
+                "car_year": int(car.year.strftime("%Y")),
+                "id": id,
+                "time": datetime.utcnow().isoformat()
             }
             
             # Prepare payload for the API request
-            new_payload = {"review": payload}
+            # new_payload = {"review": payload}
             review_post_url = "https://usman211-5000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review"
             
             # Make the POST request
-            post_request(review_post_url, new_payload, id=id)
+            post_request(review_post_url, payload, id=id)
             
-            return redirect("djangoapp:dealer_details", id=id)
+            return redirect("djangoapp:dealer_details", dealer_id=id)
         else:
             # Handle the case where the user is not authenticated
             messages.warning(request, "New review not added. Please log in to add a review !!")
