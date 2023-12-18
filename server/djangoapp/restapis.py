@@ -182,50 +182,50 @@ def get_dealer_reviews_from_cf(url, **kwargs):
     return results
 
 
-def analyze_review_sentiments(dealer_review):
-    try:
-        # Attempt to retrieve API key and URL from environment variables
-        apikey = os.environ.get("APINLU")  # export APINLU="apikey_nlu" in terminal
-        url = os.environ.get("URLNLU")  # export URLNLU="url_nlu" in terminal
+# def analyze_review_sentiments(dealer_review):
+#     try:
+#         # Attempt to retrieve API key and URL from environment variables
+#         apikey = os.environ.get('LwG_yYL2rVwuc5eWGz6RAH9dx_KeZStH-mncDTWOB4FU')  # export APINLU="apikey_nlu" in terminal
+#         url = os.environ.get('https://api.au-syd.natural-language-understanding.watson.cloud.ibm.com/instances/235f9b08-229d-41de-9014-445ee9ea2a35')  # export URLNLU="url_nlu" in terminal
 
-        # Check if API key and URL are available
-        if not apikey:
-            raise ValueError("LwG_yYL2rVwuc5eWGz6RAH9dx_KeZStH-mncDTWOB4FU")
-        if not url:
-            raise ValueError("https://api.au-syd.natural-language-understanding.watson.cloud.ibm.com/instances/235f9b08-229d-41de-9014-445ee9ea2a35")
+#         # Check if API key and URL are available
+#         if not apikey:
+#             raise ValueError("LwG_yYL2rVwuc5eWGz6RAH9dx_KeZStH-mncDTWOB4FU")
+#         if not url:
+#             raise ValueError("https://api.au-syd.natural-language-understanding.watson.cloud.ibm.com/instances/235f9b08-229d-41de-9014-445ee9ea2a35")
         
-        authenticator = IAMAuthenticator(apikey)
-        natural_language_understanding = NaturalLanguageUnderstandingV1(
-            version='2022-04-07',
-            authenticator=authenticator
-        )
+#         authenticator = IAMAuthenticator(apikey)
+#         natural_language_understanding = NaturalLanguageUnderstandingV1(
+#             version='2022-04-07',
+#             authenticator=authenticator
+#         )
 
-        natural_language_understanding.set_service_url(url)
+#         natural_language_understanding.set_service_url(url)
 
-        response = natural_language_understanding.analyze(
-            text=dealer_review,
-            language='en',
-            features=Features(sentiment=SentimentOptions(targets=[dealer_review]))
-        ).get_result()
+#         response = natural_language_understanding.analyze(
+#             text=dealer_review,
+#             language='en',
+#             features=Features(sentiment=SentimentOptions(targets=[dealer_review]))
+#         ).get_result()
 
-        print(json.dumps(response, indent=2))
+#         print(json.dumps(response, indent=2))
 
-        return response["sentiment"]["document"]["label"]
+#         return response["sentiment"]["document"]["label"]
 
-    except Exception as e:
-        # Handle any exceptions that may occur
-        print(f"Error in analyze_review_sentiments: {e}")
-        return None
+#     except Exception as e:
+#         # Handle any exceptions that may occur
+#         print(f"Error in analyze_review_sentiments: {e}")
+#         return None
 
-# def analyze_review_sentiments(text):
-#     url = "https://api.au-syd.natural-language-understanding.watson.cloud.ibm.com/instances/235f9b08-229d-41de-9014-445ee9ea2a35"
-#     api_key = "LwG_yYL2rVwuc5eWGz6RAH9dx_KeZStH-mncDTWOB4FU"
-#     authenticator = IAMAuthenticator(api_key)
-#     natural_language_understanding = NaturalLanguageUnderstandingV1(version='2021-08-01',authenticator=authenticator)
-#     natural_language_understanding.set_service_url(url)
-#     response = natural_language_understanding.analyze( text=text+"hello hello hello",features=Features(sentiment=SentimentOptions(targets=[text+"hello hello hello"]))).get_result()
-#     label=json.dumps(response, indent=2)
-#     label = response['sentiment']['document']['label']
+def analyze_review_sentiments(text):
+    url = "https://api.au-syd.natural-language-understanding.watson.cloud.ibm.com/instances/235f9b08-229d-41de-9014-445ee9ea2a35"
+    api_key = "LwG_yYL2rVwuc5eWGz6RAH9dx_KeZStH-mncDTWOB4FU"
+    authenticator = IAMAuthenticator(api_key)
+    natural_language_understanding = NaturalLanguageUnderstandingV1(version='2021-08-01',authenticator=authenticator)
+    natural_language_understanding.set_service_url(url)
+    response = natural_language_understanding.analyze( text=text+"hello hello hello",features=Features(sentiment=SentimentOptions(targets=[text+"hello hello hello"]))).get_result()
+    label=json.dumps(response, indent=2)
+    label = response['sentiment']['document']['label']
     
     
-#     return(label)
+    return(label)
