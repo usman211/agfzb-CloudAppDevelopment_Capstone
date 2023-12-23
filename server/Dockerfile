@@ -1,28 +1,28 @@
-    FROM python:3.8.2
+FROM python:3.8.2
 
-    ENV PYTHONBUFFERED 1
-    ENV PYTHONWRITEBYTECODE 1
+ENV PYTHONBUFFERED 1
+ENV PYTHONWRITEBYTECODE 1
 
-    RUN apt-get update \
-        && apt-get install -y netcat
+RUN apt-get update \
+    && apt-get install -y netcat
 
-    ENV APP=/app
+ENV APP=/app
 
-    # Change the workdir.
-    WORKDIR $APP
+# Change the workdir.
+WORKDIR $APP
 
-    # Install the requirements
-    COPY requirements.txt $APP
+# Install the requirements
+COPY requirements.txt $APP
 
-    RUN pip3 install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
-    # Copy the rest of the files
-    COPY . $APP
+# Copy the rest of the files
+COPY . $APP
 
-    EXPOSE 8000
+EXPOSE 8000
 
-    RUN chmod +x /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-    ENTRYPOINT ["/bin/bash","/app/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash","/app/entrypoint.sh"]
 
-    CMD ["gunicorn", "--bind", ":8000", "--workers", "3", "djangobackend.wsgi"]
+CMD ["gunicorn", "--bind", ":8000", "--workers", "3", "djangobackend.wsgi"]
